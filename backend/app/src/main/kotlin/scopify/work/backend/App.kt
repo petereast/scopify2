@@ -5,10 +5,11 @@ package scopify.work.backend
 
 import io.ktor.application.*
 import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
 import io.ktor.gson.*
 import io.ktor.response.*
 import com.apurebase.kgraphql.GraphQL
+import io.ktor.features.*
+import io.ktor.http.*
 import io.ktor.routing.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -27,6 +28,18 @@ fun main(args: Array<String>) {
     embeddedServer(Netty, port = port) {
         install(ContentNegotiation) {
             gson()
+        }
+
+        install(CORS) {
+            /*
+            method(HttpMethod.Post)
+            method(HttpMethod.Options)
+            host("localhost:3001", schemes = listOf("http", "https"))
+
+             */
+            header("Content-Type")
+            header("Access-Control-Allow-Origin")
+            anyHost()
         }
 
         install(GraphQL) {
