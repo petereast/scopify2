@@ -3,13 +3,46 @@
  */
 package scopify.work.backend
 
+import io.ktor.application.*
+import io.ktor.application.install
+import io.ktor.features.ContentNegotiation
+import io.ktor.gson.*
+import io.ktor.response.*
+import com.apurebase.kgraphql.GraphQL
+import io.ktor.routing.*
+import io.ktor.server.engine.*
+import io.ktor.server.netty.*
+import scopify.work.backend.graphql.scopeSchema
+
 class App {
     val greeting: String
         get() {
             return "Hello World!"
         }
 }
+data class Healthcheck(val ok: Boolean = true)
 
 fun main(args: Array<String>) {
-    println(App().greeting)
+    val port = Integer.valueOf(System.getenv("PORT") ?: "8004")
+    embeddedServer(Netty, port = port) {
+        install(ContentNegotiation) {
+            gson()
+        }
+
+        install(GraphQL) {
+            useDefaultPrettyPrinter = true
+
+            playground = true
+            endpoint = "/graphql"
+            schema {
+                scopeSchema()
+            }
+        }
+
+        routing {
+            get("/health") {
+                call.respond(Healthcheck())
+            }
+        }
+    }.start(wait = false)
 }
