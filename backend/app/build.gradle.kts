@@ -19,6 +19,9 @@ repositories {
     jcenter()
 }
 
+val ktor_version = "1.5.2"
+val KGraphQLVersion = "0.17.4"
+
 dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -29,6 +32,13 @@ dependencies {
     // This dependency is used by the application.
     implementation("com.google.guava:guava:29.0-jre")
 
+    implementation("io.ktor:ktor-server-core:$ktor_version")
+    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
+    implementation("com.apurebase:kgraphql-ktor:$KGraphQLVersion")
+    implementation("com.apurebase:kgraphql:$KGraphQLVersion")
+    implementation("io.ktor:ktor-gson:$ktor_version")
+    implementation("redis.clients:jedis:3.5.2")
     // Use the Kotlin test library.
     testImplementation("org.jetbrains.kotlin:kotlin-test")
 
