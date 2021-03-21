@@ -37,20 +37,7 @@ class RedisDal() : IScopeRepository {
 }
 
 fun createJedisPool(): JedisPool {
-    val poolConfig = JedisPoolConfig()
-    poolConfig.setMaxTotal(20)
-    poolConfig.setMaxIdle(20)
-    poolConfig.setMinIdle(10)
-    poolConfig.setTestOnBorrow(true)
-    poolConfig.setTestOnReturn(true)
-    poolConfig.setTestWhileIdle(true)
-    poolConfig.setMinEvictableIdleTimeMillis(Duration.ofSeconds(60).toMillis())
-    poolConfig.setTimeBetweenEvictionRunsMillis(Duration.ofSeconds(30).toMillis())
-    poolConfig.setNumTestsPerEvictionRun(3)
-    poolConfig.setBlockWhenExhausted(true)
+    val redisUrl = URI.create(System.getenv("REDIS_URL") ?: "redis://localhost")
 
-    val redisUrl = System.getenv("REDIS_URL") ?: "localhost"
-    println(redisUrl)
-
-    return JedisPool(poolConfig, redisUrl)
+    return JedisPool(redisUrl, 60)
 }
