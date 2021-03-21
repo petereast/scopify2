@@ -50,3 +50,7 @@ application {
     // Define the main class for the application.
     mainClass.set("scopify.work.backend.AppKt")
 }
+
+task("stage") {
+  dependsOn("clean", "jar")
+}
