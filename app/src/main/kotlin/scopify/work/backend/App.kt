@@ -21,7 +21,6 @@ class App {
             return "Hello World!"
         }
 }
-
 data class Healthcheck(val ok: Boolean = true)
 
 fun main(args: Array<String>) {
@@ -39,12 +38,15 @@ fun main(args: Array<String>) {
             gson()
         }
         install(CORS) {
-            header("Content-Type")
-            header("Access-Control-Allow-Origin")
+            /*
             method(HttpMethod.Post)
             method(HttpMethod.Options)
             host("localhost:3001", schemes = listOf("http", "https"))
-            host("scopify.work", schemes = listOf("https"))
+
+             */
+            header("Content-Type")
+            header("Access-Control-Allow-Origin")
+            anyHost()
         }
 
         install(GraphQL) {
