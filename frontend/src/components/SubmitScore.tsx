@@ -10,7 +10,7 @@ const SUBMIT_SCOPE_SCORE = gql`
       averageScore
       scores {
         name
-        score
+        value
       }
     }
   }

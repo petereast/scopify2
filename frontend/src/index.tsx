@@ -9,6 +9,8 @@ import {
   InMemoryCache,
 } from '@apollo/client';
 
+const backend_url = process.env.REACT_APP_BACKEND_URL || "http://localhost:8004/graphql";
+
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
@@ -17,7 +19,7 @@ const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
       }
     }
   }),
-  uri: 'http://localhost:8004/graphql'
+  uri: backend_url,
 });
 
 ReactDOM.render(
