@@ -8,7 +8,7 @@ class SessionAlreadyFinished(id: String) : Exception("Session $id already finish
 class Scopify(val scopeRepo: IScopeRepository) {
 
     private fun calculateAverageScore(scores: List<ScopeScore>): Double {
-        val totalScore: Int = scores.map { item -> item.value }.reduce { acc: Int, i: Int -> i + acc }
+        val totalScore: Int = scores.map { item -> item.value }.fold(0) { acc: Int, i: Int -> i + acc }
         return totalScore.toDouble() /  scores.size.toDouble()
     }
 

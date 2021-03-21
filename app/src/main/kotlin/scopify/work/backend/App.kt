@@ -26,10 +26,17 @@ data class Healthcheck(val ok: Boolean = true)
 fun main(args: Array<String>) {
     val port = Integer.valueOf(System.getenv("PORT") ?: "8004")
     embeddedServer(Netty, port = port) {
+
+        install(CallLogging)
+        install(StatusPages) {
+            exception<Throwable> { cause ->
+                call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+                throw cause
+            }
+        }
         install(ContentNegotiation) {
             gson()
         }
-
         install(CORS) {
             /*
             method(HttpMethod.Post)

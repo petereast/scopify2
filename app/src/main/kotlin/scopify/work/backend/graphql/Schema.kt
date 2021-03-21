@@ -13,7 +13,11 @@ fun SchemaBuilder.scopeSchema() {
     query("session") {
         description = "Gets a single scoping session"
         resolver { id: String ->
-            sessionService.getById(id)
+
+            val session = sessionService.getById(id)
+            println(session)
+
+            session
         }
     }
 
