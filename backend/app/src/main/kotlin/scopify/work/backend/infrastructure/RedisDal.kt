@@ -49,5 +49,8 @@ fun createJedisPool(): JedisPool {
     poolConfig.setNumTestsPerEvictionRun(3)
     poolConfig.setBlockWhenExhausted(true)
 
-    return JedisPool(poolConfig, System.getenv("REDIS_URL") ?: "localhost")
+    val redisUrl = System.getenv("REDIS_URL") ?: "localhost"
+    println(redisUrl)
+
+    return JedisPool(poolConfig, redisUrl)
 }
