@@ -51,7 +51,6 @@ fun main(args: Array<String>) {
 
         install(GraphQL) {
             useDefaultPrettyPrinter = true
-
             playground = true
             endpoint = "/graphql"
             schema {
