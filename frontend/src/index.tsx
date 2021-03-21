@@ -10,7 +10,13 @@ import {
 } from '@apollo/client';
 
 const client: ApolloClient<NormalizedCacheObject> = new ApolloClient({
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      ScopeSession: {
+        keyFields: ["id"]
+      }
+    }
+  }),
   uri: 'http://localhost:8004/graphql'
 });
 
