@@ -9,10 +9,17 @@ class Scopify(val scopeRepo: IScopeRepository) {
 
     private fun calculateAverageScore(scores: List<ScopeScore>): Double {
         val totalScore: Int = scores.map { item -> item.value }.fold(0) { acc: Int, i: Int -> i + acc }
-        return totalScore.toDouble() /  scores.size.toDouble()
+        return totalScore.toDouble() / scores.size.toDouble()
     }
 
-    fun getById(id: String): ScopeSession? = scopeRepo.getSession(id)
+    fun getById(id: String): ScopeSession? {
+        try {
+            return scopeRepo.getSession(id)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw e
+        }
+    }
 
     fun createSession(title: String, description: String): ScopeSession {
         val scopeSession = ScopeSession(generateId(), title, description)
@@ -33,12 +40,12 @@ class Scopify(val scopeRepo: IScopeRepository) {
             scores.add(scopeScore)
 
             val updatedSession = ScopeSession(
-                    id = existingSession.id,
-                    title = existingSession.title,
-                    description = existingSession.description,
-                    scores = scores,
-                    averageScore = calculateAverageScore(scores),
-                    state = ScopeState.InProgress
+                id = existingSession.id,
+                title = existingSession.title,
+                description = existingSession.description,
+                scores = scores,
+                averageScore = calculateAverageScore(scores),
+                state = ScopeState.InProgress
             )
             scopeRepo.writeSession(updatedSession)
 
