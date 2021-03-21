@@ -6,6 +6,7 @@ import redis.clients.jedis.JedisPool
 import redis.clients.jedis.JedisPoolConfig
 import scopify.work.backend.model.IScopeRepository
 import scopify.work.backend.model.ScopeSession
+import java.net.URI
 import java.time.Duration
 
 private val pool: JedisPool = createJedisPool()
