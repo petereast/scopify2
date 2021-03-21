@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, {  useEffect } from "react";
 
 import { gql, useMutation, useQuery } from "@apollo/client";
 import classnames from "classnames";
@@ -64,6 +64,7 @@ export default function ShowScopeSession({
     return () => clearInterval(timer);
   });
 
+  if(endError) return <div>Failed to end scope: {endError.message}</div>
   if (error) return <div>{error.message}</div>;
   if (loading) return <div>Loading...</div>;
 
@@ -105,7 +106,7 @@ export default function ShowScopeSession({
         <footer className="card-footer">
           <button
             onClick={() => endScopeMutation()}
-            className="button card-footer-item is-danger is-inverted"
+            className={classnames("button card-footer-item is-danger is-inverted", {"is-loading": endLoading})}
             disabled={session.state === "Complete"}
           >
             End Session

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { Redirect } from "react-router-dom";
 import { addHistoryItem } from "../scope_history";
