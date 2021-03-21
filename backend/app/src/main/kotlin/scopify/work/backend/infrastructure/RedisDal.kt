@@ -2,36 +2,51 @@ package scopify.work.backend.infrastructure
 
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
-import redis.clients.jedis.Jedis
+import redis.clients.jedis.JedisPool
+import redis.clients.jedis.JedisPoolConfig
 import scopify.work.backend.model.IScopeRepository
 import scopify.work.backend.model.ScopeSession
+import java.time.Duration
 
-class NotFound(message: String? = "Entity not found!") : Exception(message)
-
-class RedisDal : IScopeRepository {
-    val jedis = Jedis(System.getenv("REDIS_URL") ?: "localhost")
+class RedisDal(private val pool: JedisPool = createJedisPool()) : IScopeRepository {
 
     // Expire after 10 mins
-    val expiry = 600
+    private val expiry = 600
 
     private fun sessionKey(id: String) = "session:$id"
 
-    private fun setExpiry(id: String) = jedis.expire(sessionKey(id), expiry)
+    private fun setExpiry(id: String) = pool.resource.use { pool -> pool.expire(sessionKey(id), expiry) }
 
     override fun getSession(id: String): ScopeSession? {
 
-        val session = Gson().fromJson<ScopeSession>(jedis.get(sessionKey(id)) ?: return null)
-
-        // Reset the expiry each time a session is fetched
-        setExpiry(id)
-
-        return session
+        pool.resource.use { pool ->
+            val session = Gson().fromJson<ScopeSession>(pool.get(sessionKey(id)) ?: return null)
+            setExpiry(id)
+            return session
+        }
     }
 
     override fun writeSession(session: ScopeSession) {
-        val sessionJson = Gson().toJson(session)
-
-        jedis.set(sessionKey(session.id), sessionJson)
-        setExpiry(session.id)
+        pool.resource.use { pool ->
+            val sessionJson = Gson().toJson(session)
+            pool.set(sessionKey(session.id), sessionJson)
+            setExpiry(session.id)
+        }
     }
+}
+
+fun createJedisPool(): JedisPool {
+    val poolConfig = JedisPoolConfig()
+    poolConfig.setMaxTotal(128)
+    poolConfig.setMaxIdle(128)
+    poolConfig.setMinIdle(16)
+    poolConfig.setTestOnBorrow(true)
+    poolConfig.setTestOnReturn(true)
+    poolConfig.setTestWhileIdle(true)
+    poolConfig.setMinEvictableIdleTimeMillis(Duration.ofSeconds(60).toMillis())
+    poolConfig.setTimeBetweenEvictionRunsMillis(Duration.ofSeconds(30).toMillis())
+    poolConfig.setNumTestsPerEvictionRun(3)
+    poolConfig.setBlockWhenExhausted(true)
+
+    return JedisPool(poolConfig, System.getenv("REDIS_URL") ?: "localhost")
 }
