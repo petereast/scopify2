@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import { gql, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import classnames from "classnames";
 
 const GET_SCOPE_QUERY = gql`
-query GetSession($id: String!) {
-  session(id: $id) {
-    id,
-    title,
-    description,
-    averageScore,
+  query GetSession($id: String!) {
+    session(id: $id) {
+      id
+      title
+      description
+      averageScore
+      state
+      scores {
+        name
+        value
+      }
+    }
   }
-}
+`;
+
+const END_SCOPE_MUTATION = gql`
+  mutation EndScope($id: String!) {
+    finishSession(sessionId: $id) {
+      id
+      state
+    }
+  }
 `;
 
 interface IScopeSession {
@@ -18,31 +33,87 @@ interface IScopeSession {
   title: string;
   description: string;
   averageScore: number;
+  state: string;
+  scores: Array<{ name: string; value: number }>;
 }
 
-export default function ShowScopeSession({ scopeId }: { scopeId: String }) {
-  const { error, loading, data } = useQuery(GET_SCOPE_QUERY, {
+export default function ShowScopeSession({
+  scopeId,
+  hideScore,
+}: {
+  scopeId: String;
+  hideScore?: boolean;
+}) {
+  const { error, loading, data, refetch } = useQuery(GET_SCOPE_QUERY, {
     variables: { id: scopeId },
+  });
+
+  const [
+    endScopeMutation,
+    { loading: endLoading, error: endError },
+  ] = useMutation(END_SCOPE_MUTATION, { variables: { id: scopeId } });
+
+  // Poll for new updates (gross, but ok for now)
+  // This also keeps the record alive in redis
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (data?.session && data.session.state !== "Complete") {
+        refetch();
+      }
+    }, 1500);
+    return () => clearInterval(timer);
   });
 
   if (error) return <div>{error.message}</div>;
   if (loading) return <div>Loading...</div>;
 
-  if (data.session)  {
+  if (data.session) {
+    const session: IScopeSession = data.session;
 
-  const session: IScopeSession = data.session;
-
-  return (
-    <div>
-      Scoping Session
-      <h1>{session.title}</h1>
-      <div>{session.description}</div>
-      <div>{session.averageScore}</div>
-    </div>
-  );
-  } else {
     return (
-      <div>Session not found</div>
-    )
+      <div className="card">
+        <div className="card-content">
+          <div className="columns">
+            <div className="column is-three-quarters">
+              <h1 className="block title is-size-4">
+                {session.title}
+                <span className="ml-2 tag">{session.state}</span>
+              </h1>
+              <p className="block ">{session.description}</p>
+            </div>
+            <div
+              className={classnames("column", "notification", "level", {
+                "is-success": data.session.state === "InProgress",
+                "is-dark": data.session.state === "Complete",
+              })}
+            >
+              <div className="level-item ">
+                <div className="container">
+                  <h1 className="title is-size-2">
+                    {!hideScore ? <>{session.averageScore}</> : null}
+                  </h1>
+                  <div className="">Average Score</div>
+                  <h1 className="title is-size-3">
+                    {!hideScore ? <>{session.scores.length}</> : null}
+                  </h1>
+                  <div className="">Total Responses</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer className="card-footer">
+          <button
+            onClick={() => endScopeMutation()}
+            className="button card-footer-item is-danger is-inverted"
+            disabled={session.state === "Complete"}
+          >
+            End Session
+          </button>
+        </footer>
+      </div>
+    );
+  } else {
+    return <div>Session not found</div>;
   }
 }

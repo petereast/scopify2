@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
 
 import Index from "./pages/Index";
 import NewScopePage from "./pages/NewScope";
@@ -24,6 +25,7 @@ function App() {
           <Index />
         </Route>
       </Switch>
+      <Footer />
     </Router>
   );
 }
