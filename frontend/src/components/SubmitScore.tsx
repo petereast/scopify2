@@ -3,7 +3,7 @@ import { gql, useMutation } from "@apollo/client";
 import classnames from "classnames";
 
 const SUBMIT_SCOPE_SCORE = gql`
-  mutation SubmitScore($id: String!, score: Int!, name: String!){
+  mutation SubmitScore($id: String!, $score: Int!, $name: String!){
     submitScore(sessionId: $id, score: $score, name: $name) {
       __typename
       id
