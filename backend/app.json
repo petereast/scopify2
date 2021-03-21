@@ -1,0 +1,6 @@
+{
+  "name": "Scopify2",
+  "description": "The backend for the second version of our famous scoping tool",
+  "image": "heroku/java",
+  "addons": [ "heroku-redis" ]
+}
