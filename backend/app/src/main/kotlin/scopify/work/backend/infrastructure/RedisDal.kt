@@ -9,7 +9,7 @@ import scopify.work.backend.model.ScopeSession
 class NotFound(message: String? = "Entity not found!") : Exception(message)
 
 class RedisDal : IScopeRepository {
-    val jedis = Jedis("localhost")
+    val jedis = Jedis(System.getenv("REDIS_URL") ?: "localhost")
 
     // Expire after 10 mins
     val expiry = 600
