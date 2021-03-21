@@ -16,7 +16,7 @@ export default function ShowScope() {
         <h1 className="title is-size-3">Scoping in Progress...</h1>
       </div>
       <div className="block container is-max-desktop">
-        <SubmitScore />
+        <SubmitScore id={id}/>
       </div>
     </div>
   );
