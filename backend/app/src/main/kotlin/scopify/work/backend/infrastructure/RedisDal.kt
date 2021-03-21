@@ -8,8 +8,9 @@ import scopify.work.backend.model.IScopeRepository
 import scopify.work.backend.model.ScopeSession
 import java.time.Duration
 
-class RedisDal(private val pool: JedisPool = createJedisPool()) : IScopeRepository {
+private val pool: JedisPool = createJedisPool()
 
+class RedisDal() : IScopeRepository {
     // Expire after 10 mins
     private val expiry = 600
 
@@ -37,9 +38,9 @@ class RedisDal(private val pool: JedisPool = createJedisPool()) : IScopeReposito
 
 fun createJedisPool(): JedisPool {
     val poolConfig = JedisPoolConfig()
-    poolConfig.setMaxTotal(128)
-    poolConfig.setMaxIdle(128)
-    poolConfig.setMinIdle(16)
+    poolConfig.setMaxTotal(20)
+    poolConfig.setMaxIdle(20)
+    poolConfig.setMinIdle(10)
     poolConfig.setTestOnBorrow(true)
     poolConfig.setTestOnReturn(true)
     poolConfig.setTestWhileIdle(true)
