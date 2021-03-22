@@ -8,8 +8,6 @@ import Index from "./pages/Index";
 import NewScopePage from "./pages/NewScope";
 import ViewScope from "./pages/ViewScope";
 
-// TODO: Add react-router here!
-
 function App() {
   return (
     <Router>
