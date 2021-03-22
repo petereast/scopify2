@@ -45,7 +45,7 @@ const ScoresList = ({
   );
 };
 
-const StatsBlock = ({ }: { scores: Array<{ name: string; value: number }>; }) => {
+const StatsBlock = ({scores: _scores} : { scores: Array<{ name: string; value: number }>; }) => {
   return (
     <div className="column is-4 ">
       <h3 className="title is-size-4 has-text-grey">Stats
