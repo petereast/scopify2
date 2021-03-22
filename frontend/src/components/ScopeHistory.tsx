@@ -2,7 +2,7 @@ import React from "react";
 
 import { getHistory, removeId } from "../scope_history";
 import { gql, useQuery } from "@apollo/client";
-import Skeleton from 'react-skeleton-loader';
+import Skeleton from "react-skeleton-loader";
 
 // const existing_history = JSON.parse(localStorage.getItem("scope_history") || "[]");
 //
@@ -39,8 +39,12 @@ const ScopeHistoryItem = ({
     return (
       <a href={`/scope/${id}`} className="box">
         <div className="columns level ">
-          <div className="column is-two-thirds is-size-5">{loading ? <Skeleton /> : data?.session.title}</div>
-          <div className="column ">Average Score: {data?.session.averageScore} </div>
+          <div className="column is-two-thirds is-size-5">
+            {loading ? <Skeleton /> : data?.session.title}
+          </div>
+          <div className="column ">
+            Average Score: {data?.session.averageScore}{" "}
+          </div>
           <div className="column is-1 tag">{data?.session.state}</div>
         </div>
       </a>
@@ -52,7 +56,9 @@ export default function ScopeHistory() {
 
   const history_list = scope_history
     .sort((a, b) => a.timestamp.getDate() - b.timestamp.getDate())
-    .map(({id, timestamp}) => (<ScopeHistoryItem id={id} timestamp={timestamp} />));
+    .map(({ id, timestamp }) => (
+      <ScopeHistoryItem id={id} timestamp={timestamp} />
+    ));
 
   return (
     <div>
@@ -60,6 +66,12 @@ export default function ScopeHistory() {
         Recent Scopes<span className="ml-2 tag">{scope_history.length}</span>{" "}
       </h2>
       {history_list}
+      {!history_list.length && (
+        <p>
+          Scopes you create will appear here. Scopes will expire 10 minutes
+          after you stop looking at them.
+        </p>
+      )}
     </div>
   );
 }
