@@ -3,7 +3,7 @@ import { gql, useMutation } from "@apollo/client";
 import classnames from "classnames";
 
 const SUBMIT_SCOPE_SCORE = gql`
-  mutation SubmitScore($id: String!, $score: Int!, $name: String!){
+  mutation SubmitScore($id: String!, $score: Int!, $name: String!) {
     submitScore(sessionId: $id, score: $score, name: $name) {
       __typename
       id
@@ -44,7 +44,12 @@ export default function SubmitScore({ id }: { id: string }) {
   };
 
   const radioButton = (value: string | number) => (
-    <label className={classnames("radio button is-large", {"is-info": value.toString()===score.toString()})} key={value}>
+    <label
+      className={classnames("radio button is-large", {
+        "is-info": value.toString() === score.toString(),
+      })}
+      key={value}
+    >
       <input
         className="radio is-hidden"
         type="radio"
@@ -80,7 +85,7 @@ export default function SubmitScore({ id }: { id: string }) {
             </div>
             <div className="mt-5 block field">
               <label className="label">And I think this task is worth...</label>
-              <div className="control">
+              <div className="control buttons">
                 {[1, 2, 3, 5, 8, 13].map(radioButton)}
               </div>
             </div>
