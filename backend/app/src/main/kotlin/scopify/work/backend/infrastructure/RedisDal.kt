@@ -38,7 +38,14 @@ class RedisDal() : IScopeRepository {
 }
 
 fun createJedisPool(): JedisPool {
-    val redisUrl = URI.create(System.getenv("REDIS_URL") ?: "redis://localhost")
+    val redisUrl = URI.create(System.getenv("REDIS_URL") ?: "redis://localhost:6379")
 
-    return JedisPool(redisUrl, 60)
+    val poolConfig = JedisPoolConfig()
+    poolConfig.maxTotal = 10
+    poolConfig.maxIdle = 5
+    poolConfig.testOnBorrow = true
+    poolConfig.testOnReturn = true
+    poolConfig.testWhileIdle = true
+
+    return JedisPool(poolConfig, redisUrl)
 }
