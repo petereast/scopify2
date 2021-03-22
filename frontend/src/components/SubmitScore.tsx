@@ -45,7 +45,7 @@ export default function SubmitScore({ id }: { id: string }) {
 
   const radioButton = (value: string | number) => (
     <label
-      className={classnames("radio button is-large", {
+      className={classnames("button is-large", {
         "is-info": value.toString() === score.toString(),
       })}
       key={value}
