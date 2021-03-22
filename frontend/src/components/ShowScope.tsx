@@ -86,12 +86,11 @@ const ScopingCard = ({session, loading, endScopeMutation}: {session?: IScopeSess
 
 export default function ShowScopeSession({
   scopeId,
-  hideScore,
 }: {
   scopeId: String;
   hideScore?: boolean;
 }) {
-  const { error, loading, data, refetch } = useQuery(GET_SCOPE_QUERY, {
+  const { error, loading: getLoading, data, refetch } = useQuery(GET_SCOPE_QUERY, {
     variables: { id: scopeId },
   });
 
@@ -110,6 +109,8 @@ export default function ShowScopeSession({
     }, 1500);
     return () => clearInterval(timer);
   });
+
+  const loading = getLoading || endLoading;
 
   if(endError) return <div>Failed to end scope: {endError.message}</div>
   if (error) return <div>{error.message}</div>;
