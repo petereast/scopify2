@@ -30,7 +30,7 @@ interface IScopeRepository {
 }
 
 private val charPool: List<Char> = ('a'..'z') + ('A'..'Z')
-fun generateId(len: Int = 10) = (0..len)
+fun generateId(len: Int = 5) = (0..len)
         .map { Random.nextInt(0, charPool.size) }
         .map ( charPool::get )
         .joinToString("")
