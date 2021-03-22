@@ -51,7 +51,7 @@ export default function ScopeHistory() {
   const scope_history = getHistory();
 
   const history_list = scope_history
-    .sort((a, b) => b.timestamp.getDate() - a.timestamp.getDate())
+    .sort((a, b) => a.timestamp.getDate() - b.timestamp.getDate())
     .map(({id, timestamp}) => (<ScopeHistoryItem id={id} timestamp={timestamp} />));
 
   return (
