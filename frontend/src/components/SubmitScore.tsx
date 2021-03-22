@@ -44,14 +44,14 @@ export default function SubmitScore({ id }: { id: string }) {
   };
 
   const radioButton = (value: string | number) => (
-    <label className="radio notification" key={value}>
+    <label className={classnames("radio button is-large", {"is-info": value.toString()===score.toString()})} key={value}>
       <input
-        className="radio"
+        className="radio is-hidden"
         type="radio"
         name="something"
         onClick={() => setScore(parseInt(value.toString()))}
       />
-      <span className="ml-2 is-size-4">{value}</span>
+      <span className="is-size-4">{value}</span>
     </label>
   );
 
