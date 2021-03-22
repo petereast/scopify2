@@ -3,6 +3,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import ScopeView from "../components/ShowScope";
 import SubmitScore from "../components/SubmitScore";
+import SessionSummary from "../components/SessionSummary";
 
 export default function ShowScope() {
   const { id } = useParams<{ id: string }>();
@@ -12,8 +13,8 @@ export default function ShowScope() {
       <div className="block container is-max-desktop">
         <ScopeView scopeId={id} />
       </div>
-      <div className="block container is-max-desktop has-text-centered notification is-info">
-        <h1 className="title is-size-3">Scoping in Progress...</h1>
+      <div className="block container is-max-desktop">
+        <SessionSummary id={id} />
       </div>
       <div className="block container is-max-desktop">
         <SubmitScore id={id} />
