@@ -2,6 +2,7 @@ import React from "react";
 
 import { getHistory, removeId } from "../scope_history";
 import { gql, useQuery } from "@apollo/client";
+import Skeleton from 'react-skeleton-loader';
 
 // const existing_history = JSON.parse(localStorage.getItem("scope_history") || "[]");
 //
@@ -30,18 +31,17 @@ const ScopeHistoryItem = ({
   });
 
   if (error) return <div>{error.message}</div>;
-  if (loading) return <div>Loading</div>;
 
-  if (data.session === null) {
+  if (!loading && data.session === null) {
     removeId(id);
     return null;
   } else {
     return (
-      <a href={`/scope/${id}`} className="block card">
-        <div className="card-content columns level ">
-          <div className="column is-two-thirds is-size-5">{data.session.title}</div>
-          <div className="column ">{data.session.averageScore} </div>
-          <div className="column is-1 tag">{data.session.state}</div>
+      <a href={`/scope/${id}`} className="box">
+        <div className="columns level ">
+          <div className="column is-two-thirds is-size-5">{loading ? <Skeleton /> : data?.session.title}</div>
+          <div className="column ">Average Score: {data?.session.averageScore} </div>
+          <div className="column is-1 tag">{data?.session.state}</div>
         </div>
       </a>
     );
