@@ -67,7 +67,7 @@ const ScopingCard = ({session, loading, endScopeMutation}: {session?: IScopeSess
                   <h1 className="title is-size-3">
                     {!loading ? <>{session?.scores.length}</> : null}
                   </h1>
-                  <div className="">Total Responses</div>
+                  <div className="">Total Response{session?.scores.length !== 1 ? "s" : ""}</div>
                 </div>
               </div>
             </div>
