@@ -37,7 +37,10 @@ export default function SubmitScore({ id }: { id: string }) {
 
   const formSubmission = (ev: FormEvent) => {
     ev.preventDefault();
-    submitScopeScore().then(() => setSubmitted(true));
+    submitScopeScore().then(() => {
+      localStorage.setItem("users_name", userName);
+      setSubmitted(true);
+    });
   };
 
   const radioButton = (value: string | number) => (
