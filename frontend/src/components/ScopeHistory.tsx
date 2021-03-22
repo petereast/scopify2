@@ -1,7 +1,6 @@
 import React from "react";
 
 import { getHistory, removeId } from "../scope_history";
-
 import { gql, useQuery } from "@apollo/client";
 
 // const existing_history = JSON.parse(localStorage.getItem("scope_history") || "[]");
@@ -38,13 +37,13 @@ const ScopeHistoryItem = ({
     return null;
   } else {
     return (
-      <div className="block card">
+      <a href={`/scope/${id}`} className="block card">
         <div className="card-content columns level ">
           <div className="column is-two-thirds is-size-5">{data.session.title}</div>
           <div className="column ">{data.session.averageScore} </div>
           <div className="column is-1 tag">{data.session.state}</div>
         </div>
-      </div>
+      </a>
     );
   }
 };
@@ -53,7 +52,7 @@ export default function ScopeHistory() {
 
   const history_list = scope_history
     .sort((a, b) => b.timestamp.getDate() - a.timestamp.getDate())
-    .map(ScopeHistoryItem);
+    .map(({id, timestamp}) => (<ScopeHistoryItem id={id} timestamp={timestamp} />));
 
   return (
     <div>
