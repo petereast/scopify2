@@ -38,7 +38,6 @@ export default function NewScopePage() {
       .catch((error) => console.log({ error }));
   };
 
-  if (loading) return <div>Loading...</div>;
   if (data) return <Redirect to={`/scope/${data.createSession.id}`} />;
 
   return (
@@ -73,10 +72,12 @@ export default function NewScopePage() {
             </div>
             <div className="field">
               <div className="control">
-                <input
-                  className={classnames("button", { "is-loading": loading })}
-                  type="submit"
-                />
+                <button
+                  className={classnames("button is-success", { "is-loading": loading })}
+                onClick={submitSession}
+                >
+                Scope Away!
+                </button>
               </div>
             </div>
           </form>
