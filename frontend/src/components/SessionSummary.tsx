@@ -73,6 +73,14 @@ export default function SessionSummary({ id }: { id: string }) {
       </div>
     );
 
+  if (data?.session === null) {
+    return <div className="block card">
+      <div className="card-content">
+        <p>Scope not found!</p>
+      </div>
+      </div>
+  }
+
   if (data?.session.state === "Complete") {
     return (
       <>
