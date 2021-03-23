@@ -12,8 +12,8 @@ import java.time.Duration
 private val pool: JedisPool = createJedisPool()
 
 class RedisDal() : IScopeRepository {
-    // Expire after 10 mins
-    private val expiry = 600
+    // Expire after 24 Hours
+    private val expiry = 60 * 60 * 24
 
     private fun sessionKey(id: String) = "session:$id"
 
