@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from "react";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
 import classnames from "classnames";
 
 const SUBMIT_SCOPE_SCORE = gql`
@@ -12,6 +12,16 @@ const SUBMIT_SCOPE_SCORE = gql`
         name
         value
       }
+    }
+  }
+`;
+
+const GET_SCOPE_STATE_QUERY = gql`
+  query GetScopeState($id: String!) {
+    session(id: $id) {
+      __typename
+      id
+      state
     }
   }
 `;
@@ -34,6 +44,12 @@ export default function SubmitScore({ id }: { id: string }) {
       },
     }
   );
+
+  const {
+    error: fetchError,
+    loading: fetchLoading,
+    data,
+  } = useQuery(GET_SCOPE_STATE_QUERY, { variables: { id } });
 
   const formSubmission = (ev: FormEvent) => {
     ev.preventDefault();
@@ -60,7 +76,10 @@ export default function SubmitScore({ id }: { id: string }) {
     </label>
   );
 
+  if (fetchError) return <div>{fetchError.message}</div>;
   if (error) return <div>{error.message}</div>;
+
+  if (fetchLoading || data?.session.state === "Complete") return null;
 
   if (!submitted) {
     return (
