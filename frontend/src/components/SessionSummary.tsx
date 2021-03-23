@@ -2,6 +2,7 @@ import React from "react";
 
 import { gql, useQuery } from "@apollo/client";
 import Skeleton from "react-skeleton-loader";
+import { Link } from 'react-router-dom';
 
 const GET_SCOPE_DETAILS_QUERY = gql`
   query GetScopeSummary($id: String!) {
@@ -91,7 +92,7 @@ export default function SessionSummary({ id }: { id: string }) {
           <div className="card-content">
             <h2 className="block title is-size-4">Had a good scope?</h2>
             <p className="block"> Why not scope again? It's free. </p>
-            <button className="block button is-success">Scope Again!</button>
+            <Link to={"/new-scope"} className="block button is-success">Scope Again!</Link>
           </div>
         </div>
       </>
