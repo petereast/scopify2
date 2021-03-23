@@ -1,6 +1,7 @@
 import React from "react";
 
 import { getHistory, removeId } from "../scope_history";
+import { Link } from 'react-router-dom';
 import { gql, useQuery } from "@apollo/client";
 import Skeleton from "react-skeleton-loader";
 
@@ -37,7 +38,7 @@ const ScopeHistoryItem = ({
     return null;
   } else {
     return (
-      <a href={`/scope/${id}`} className="box">
+      <Link to={`/scope/${id}`} className="box">
         <div className="columns level ">
           <div className="column is-two-thirds is-size-5">
             {loading ? <Skeleton /> : data?.session.title}
@@ -47,7 +48,7 @@ const ScopeHistoryItem = ({
           </div>
           <div className="column is-1 tag">{data?.session.state}</div>
         </div>
-      </a>
+      </Link >
     );
   }
 };
