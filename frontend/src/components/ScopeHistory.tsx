@@ -4,6 +4,10 @@ import { getHistory, removeId } from "../scope_history";
 import { Link } from 'react-router-dom';
 import { gql, useQuery } from "@apollo/client";
 import Skeleton from "react-skeleton-loader";
+import dayjs  from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime)
 
 // const existing_history = JSON.parse(localStorage.getItem("scope_history") || "[]");
 //
@@ -42,6 +46,7 @@ const ScopeHistoryItem = ({
         <div className="columns level ">
           <div className="column is-two-thirds is-size-5">
             {loading ? <Skeleton /> : data?.session.title}
+            <div className="header is-size-7">{dayjs(timestamp).fromNow()}</div>
           </div>
           <div className="column ">
             Average Score: {data?.session.averageScore}{" "}
