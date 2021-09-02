@@ -112,10 +112,11 @@ export default function ShowScopeSession({
   scopeId: String;
   hideScore?: boolean;
 }) {
-  const { error, loading: getLoading, data, refetch } = useQuery(
+  const { error, loading: getLoading, data } = useQuery(
     GET_SCOPE_QUERY,
     {
       variables: { id: scopeId },
+      pollInterval: 1000,
     }
   );
 
@@ -126,15 +127,7 @@ export default function ShowScopeSession({
 
   // Poll for new updates (gross, but ok for now)
   // This also keeps the record alive in redis
-  useEffect(() => {
-    const timer = setInterval(() => {
-      if (data?.session && data.session.state !== "Complete") {
-        refetch();
-      }
-    }, 1500);
-    return () => clearInterval(timer);
-  });
-
+  
   const loading = getLoading || endLoading;
 
   if (endError) return <div>Failed to end scope: {endError.message}</div>;
