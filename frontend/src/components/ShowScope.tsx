@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import { gql, useMutation, useQuery } from "@apollo/client";
 import classnames from "classnames";
