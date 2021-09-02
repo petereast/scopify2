@@ -32,6 +32,7 @@ const ScopeHistoryItem = ({
   timestamp: Date;
 }) => {
   const { error, loading, data } = useQuery(SCOPE_SUMMARY_QUERY, {
+    pollInterval: 1000,
     variables: { id },
   });
 
