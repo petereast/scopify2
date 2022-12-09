@@ -46,7 +46,9 @@ const ScopingCard = ({
   session?: IScopeSession;
   loading: boolean;
   endScopeMutation: () => void;
-}) => (
+}) => {
+  const shouldShowScores = !loading && session?.state === "Complete";
+  return (
   <div className="card">
     <div className="card-content">
       <div className="columns">
@@ -78,7 +80,7 @@ const ScopingCard = ({
           <div className="level-item ">
             <div className="container">
               <h1 className="title is-size-2">
-                {!loading ? <>{session?.averageScore}</> : null}
+                {shouldShowScores ? <>{session?.averageScore}</> : null}
               </h1>
               <div className="">Average Score</div>
               <h1 className="title is-size-3">
@@ -104,7 +106,7 @@ const ScopingCard = ({
       </button>
     </footer>
   </div>
-);
+)};
 
 export default function ShowScopeSession({
   scopeId,
