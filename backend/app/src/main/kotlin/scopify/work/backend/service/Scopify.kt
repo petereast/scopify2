@@ -5,7 +5,7 @@ import scopify.work.backend.model.*
 class SessionNotFound(id: String) : Exception("Session with it \"$id\" not found!")
 class SessionAlreadyFinished(id: String) : Exception("Session $id already finished!")
 
-class Scopify(val scopeRepo: IScopeRepository) {
+class Scopify(private val scopeRepo: IScopeRepository) {
 
     private fun calculateAverageScore(scores: List<ScopeScore>): Double {
         val totalScore: Int = scores.map { item -> item.value }.fold(0) { acc: Int, i: Int -> i + acc }
