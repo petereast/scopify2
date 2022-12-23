@@ -9,10 +9,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
  * User Manual available at https://docs.gradle.org/6.7.1/userguide/building_java_projects.html
  */
 
-
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.3.72"    
+    id("org.jetbrains.kotlin.jvm") version "1.3.72"
     id("com.github.johnrengelman.shadow") version "5.1.0"
 
     // Apply the application plugin to add support for building a CLI application in Java.
@@ -64,7 +63,7 @@ tasks.withType<ShadowJar> {
 }
 
 task("stage") {
-  dependsOn("clean", "shadowJar")
+    dependsOn("clean", "shadowJar")
 }
 
 val compileTestKotlin: KotlinCompile by tasks

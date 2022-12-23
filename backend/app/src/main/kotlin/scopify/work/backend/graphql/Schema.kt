@@ -2,6 +2,7 @@ package scopify.work.backend.graphql
 
 import com.apurebase.kgraphql.schema.dsl.SchemaBuilder
 import scopify.work.backend.infrastructure.RedisDal
+import scopify.work.backend.model.ScopeGroup
 import scopify.work.backend.model.ScopeScore
 import scopify.work.backend.model.ScopeSession
 import scopify.work.backend.model.ScopeState
@@ -21,14 +22,43 @@ fun SchemaBuilder.scopeSchema() {
         }
     }
 
+    query("group") {
+        description = "Gets a single group of scopes"
+        resolver { id: String ->
+            // Gets a group of scopes
+            // TODO: Add a resolver that gets the scopes in that group
+            sessionService.getScopeGroup(id)
+        }
+        type<ScopeGroup>() {
+          property<List<ScopeSession>>("scopes") {
+            resolver { group: ScopeGroup ->
+              sessionService.getGroupScopes(group.id).map {
+                sessionService.getById(it)
+              }.filterNotNull()
+            }
+          }
+        }
+    }
+
+
     type<ScopeSession>()
     enum<ScopeState>()
+
+    mutation("createGroup") {
+        description = "Creates a new scope group"
+
+        resolver { title: String ->
+            // Creates a new group of scopes.
+
+            sessionService.createScopeGroup(title)
+        }
+    }
 
     mutation("createSession") {
         description = "Creates a new session"
 
-        resolver { title: String, description: String ->
-            sessionService.createSession(title, description)
+        resolver { title: String, description: String, group: String? ->
+            sessionService.createSession(title, description, group)
         }
     }
 
