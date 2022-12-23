@@ -5,7 +5,7 @@ import scopify.work.backend.model.*
 class SessionNotFound(id: String) : Exception("Session with it \"$id\" not found!")
 class SessionAlreadyFinished(id: String) : Exception("Session $id already finished!")
 
-class Scopify(val scopeRepo: IScopeRepository) {
+class Scopify(private val scopeRepo: IScopeRepository) {
 
     private fun calculateAverageScore(scores: List<ScopeScore>): Double {
         val totalScore: Int = scores.map { item -> item.value }.fold(0) { acc: Int, i: Int -> i + acc }
@@ -21,9 +21,10 @@ class Scopify(val scopeRepo: IScopeRepository) {
         }
     }
 
-    fun createSession(title: String, description: String): ScopeSession {
+    fun createSession(title: String, description: String, groupId: String? = null): ScopeSession {
+      
         try {
-            val scopeSession = ScopeSession(generateId(), title, description)
+            val scopeSession = ScopeSession(generateId(), title, description, group = groupId)
             scopeRepo.writeSession(scopeSession)
             return scopeSession
         } catch (e: Exception) {
@@ -46,12 +47,13 @@ class Scopify(val scopeRepo: IScopeRepository) {
                 scores.add(scopeScore)
 
                 val updatedSession = ScopeSession(
-                        id = existingSession.id,
-                        title = existingSession.title,
-                        description = existingSession.description,
-                        scores = scores,
-                        averageScore = calculateAverageScore(scores),
-                        state = ScopeState.InProgress
+                    id = existingSession.id,
+                    title = existingSession.title,
+                    description = existingSession.description,
+                    group = existingSession.group,
+                    scores = scores,
+                    averageScore = calculateAverageScore(scores),
+                    state = ScopeState.InProgress
                 )
                 scopeRepo.writeSession(updatedSession)
 
@@ -70,12 +72,25 @@ class Scopify(val scopeRepo: IScopeRepository) {
             val session = scopeRepo.getSession(sessionId) ?: throw SessionNotFound(sessionId)
             if (session.state == ScopeState.Complete) throw SessionAlreadyFinished(sessionId)
 
-            session.state = ScopeState.Complete
-            scopeRepo.writeSession(session)
+            val newSession = session.copy(state = ScopeState.Complete)
+
+            scopeRepo.writeSession(newSession)
 
             return session
         } catch (e: Exception) {
             throw e
         }
+    }
+
+    fun getScopeGroup(id: String): ScopeGroup? {
+      return scopeRepo.getGroup(id)
+    }
+
+    fun createScopeGroup(title: String): ScopeGroup {
+      return requireNotNull(scopeRepo.createGroup(generateId(), title))
+    }
+
+    fun getGroupScopes(id: String): List<String> {
+      return scopeRepo.getGroupScopes(id)
     }
 }
